@@ -2,45 +2,45 @@
 import threading
 import socket
 
-# Get an alias from the user
-alias = input('choose an alias >>> ')
+# Get an nick_name from the user
+nick_name = input('choose an nick_name >>> ')
 
-# Create a new client socket
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Create a new user socket
+user = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# Connect the client socket to a server
-client.connect(('127.0.0.1',5678))
+# Connect the user socket to a server
+user.connect(('127.0.0.1',5678))
 
 # Define a function to receive messages from the server
-def client_receive():
+def user_receive():
     while True:
         try:
             # Receive a message from the server
-            message = client.recv(1024).decode('utf-8')
-            # If the server requests an alias, send it
-            if message == "alias?":
-                client.send(alias.encode('utf-8'))
+            message = user.recv(1024).decode('utf-8')
+            # If the server requests an nick_name, send it
+            if message == "nick_name?":
+                user.send(nick_name.encode('utf-8'))
             # Otherwise, print the message
             else:
                 print(message)
-        # If an error occurs, close the client socket and break the loop
+        # If an error occurs, close the user socket and break the loop
         except:
             print("error!")
-            client.close()
+            user.close()
             break
 
 # Define a function to send messages to the server
-def client_send():
+def user_send():
     while True:
-        # Get a message from the user and format it with the alias
-        message = f'{alias}: {input("")}'
+        # Get a message from the user and format it with the nick_name
+        message = f'{nick_name}: {input("")}'
         # Send the message to the server
-        client.send(message.encode('utf-8'))
+        user.send(message.encode('utf-8'))
 
 # Create a new thread to receive messages from the server
-receive_thread = threading.Thread(target=client_receive)
+receive_thread = threading.Thread(target=user_receive)
 receive_thread.start()
 
 # Create a new thread to send messages to the server
-send_thread = threading.Thread(target=client_send)
+send_thread = threading.Thread(target=user_send)
 send_thread.start()
